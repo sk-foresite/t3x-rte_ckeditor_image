@@ -145,12 +145,12 @@ class ImageRenderingController extends AbstractPlugin
         }
 
         // Image template; empty attributes are removed by 3rd param 'false'
-        $img = '<img ' . GeneralUtility::implodeAttributes($imageAttributes, true) . ' />';
+        $img = '<img ' . GeneralUtility::implodeAttributes($imageAttributes, true, true) . ' />';
 
         // Popup rendering (support new `zoom` and legacy `clickenlarge` attributes)
         if (
             (isset($imageAttributes['data-htmlarea-zoom'])
-            || isset($imageAttributes['data-htmlarea-clickenlarge']))
+                || isset($imageAttributes['data-htmlarea-clickenlarge']))
             && isset($systemImage)
         ) {
             $config = $GLOBALS['TSFE']->tmpl->setup['lib.']['contentElement.']['settings.']['media.']['popup.'] ?? [];
