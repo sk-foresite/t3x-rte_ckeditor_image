@@ -165,10 +165,19 @@ class SelectImageController extends ElementBrowserController
      */
     protected function processImage(File $file, array $params): ProcessedFile
     {
-
-        // Use the page tsConfig to set he maximum dimensions
-        //$this->magicImageService
-        //    ->setMagicImageMaximumDimensions($rteConfiguration);
+        // TODO: Get this from page ts config
+        $this->magicImageService->setMagicImageMaximumDimensions([
+            'buttons.' => [
+                'image.' => [
+                    'options.' => [
+                        'magic.' => [
+                            'maxWidth' => 1920,
+                            'maxHeight' => 9999,
+                        ]
+                    ]
+                ]
+            ]
+        ]);
 
         return $this->magicImageService
             ->createMagicImage(
