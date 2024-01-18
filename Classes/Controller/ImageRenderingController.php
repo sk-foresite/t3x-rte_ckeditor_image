@@ -78,15 +78,13 @@ class ImageRenderingController extends AbstractPlugin
                     $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
                     $systemImage     = $resourceFactory->getFileObject($fileUid);
 
-                    if ($imageSource !== $systemImage->getPublicUrl()) {
-                        // Source file is a processed image
-                        $imageConfiguration = [
-                            'width'  => (int) ($imageAttributes['width']  ?? $systemImage->getProperty('width') ?? 0),
-                            'height' => (int) ($imageAttributes['height'] ?? $systemImage->getProperty('height') ?? 0),
-                        ];
+                    $imageConfiguration = [
+                        'width'  => (int) ($imageAttributes['width']  ?? $systemImage->getProperty('width') ?? 0),
+                        'height' => (int) ($imageAttributes['height'] ?? $systemImage->getProperty('height') ?? 0),
+                    ];
 
-                        $processedFile = $this->getMagicImageService()
-                            ->createMagicImage($systemImage, $imageConfiguration);
+                    $processedFile = $this->getMagicImageService()
+                        ->createMagicImage($systemImage, $imageConfiguration);
 
                         $imageSource = $processedFile->getPublicUrl();
                         $additionalAttributes = [
@@ -97,20 +95,19 @@ class ImageRenderingController extends AbstractPlugin
                             'height' => $processedFile->getProperty('height') ?? $imageConfiguration['height'],
                         ];
 
-                        $lazyLoading = $this->getLazyLoadingConfiguration();
+                    $lazyLoading = $this->getLazyLoadingConfiguration();
 
-                        if ($lazyLoading !== null) {
-                            $additionalAttributes['loading'] = $lazyLoading;
-                        }
-
-                        // Remove internal attributes
-                        unset(
-                            $imageAttributes['data-title-override'],
-                            $imageAttributes['data-alt-override']
-                        );
-
-                        $imageAttributes = array_merge($imageAttributes, $additionalAttributes);
+                    if ($lazyLoading !== null) {
+                        $additionalAttributes['loading'] = $lazyLoading;
                     }
+
+                    // Remove internal attributes
+                    unset(
+                        $imageAttributes['data-title-override'],
+                        $imageAttributes['data-alt-override']
+                    );
+
+                    $imageAttributes = array_merge($imageAttributes, $additionalAttributes);
                 } catch (FileDoesNotExistException $fileDoesNotExistException) {
                     // Log in fact the file could not be retrieved
                     $this->getLogger()->log(
